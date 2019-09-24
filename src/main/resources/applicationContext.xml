@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+		http://www.springframework.org/schema/context   
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd   
+		http://www.springframework.org/schema/tx   
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd   
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd"  ><!-- 全局 -->
+	
+	<!--包扫描  -->
+	<context:component-scan base-package="com.awsl"/>	
+	<!-- 配置数据源（一切的前提） -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init">
+		   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		   <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=utf-8"/>
+		   <property name="username" value="root" />
+           <property name="password" value="123456" />
+	</bean>
+	
+	
+	
+	<!--配置SqlsessionFactory 会话工厂   （mybatis 框架已经被集成进来）-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		   <!-- 数据源 -->
+		   <property name="dataSource" ref="dataSource"/>
+		   <!-- 类别名，该包下面的所有类以类名作为别名 -->
+		   <property name="typeAliasesPackage" value="com.awsl.entity"/>
+		   <!-- orm 映射文件，指定包以及以及包下所有xml文件 -->
+		   <property name="mapperLocations" value="classpath:com/awsl/mapper/**/*.xml"/>
+	</bean>
+	
+	<!-- 配置事务管理 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	    <property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 配置通知和事务关系 -->
+	<tx:advice id="advice" transaction-manager="transactionManager">
+		   <tx:attributes>
+		   <!-- 对于add、save等开头的方法，每次操作都要开事务   其他的不开，只读-->
+		       <tx:method name="add*" propagation="REQUIRED"/>
+		       <tx:method name="save*" propagation="REQUIRED"/>
+		       <tx:method name="update*" propagation="REQUIRED"/>
+		       <tx:method name="edit*" propagation="REQUIRED"/>
+		       <tx:method name="modif*" propagation="REQUIRED"/>
+		       <tx:method name="del*" propagation="REQUIRED"/>
+		       <tx:method name="*" propagation="NOT_SUPPORTED" read-only="true"/>
+		   </tx:attributes>
+	
+	</tx:advice>
+	<!-- 配置Aop -->
+	<aop:config>
+	    <!-- 切入点   在这个地址里面，满足配置通知中的条件，都适用-->
+	    <aop:pointcut expression="execution(* com.awsl.service.impl.*.*(..))" id="pointcut"/>
+	    <!-- 通知 -->
+	    <aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
+	</aop:config>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+	   <property name="dataSource" ref="dataSource"></property>
+	</bean>
+		
+		
+	
+		
+		
+</beans>

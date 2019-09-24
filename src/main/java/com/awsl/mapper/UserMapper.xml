@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 使用接口实现  命名空间有所不同！ -->
+<mapper namespace="User"><!-- 命名空间 -->
+    
+     <select id="queryById" resultType="User">
+       select * from user where id= #{id}    
+     </select>
+  
+    
+     <select id="queryAll" resultType="User"><!-- resultType="User" 返回结果类型 -->
+       select * from user by id 
+     </select>
+     <!-- 添加订单 -->
+     <insert id="add" parameterType="User">
+         insert into user(username,password)  values(#{username},#{password}) 
+     </insert>
+     <!-- 分页 -->
+     <select id="queryByPage" parameterType="map" resultType="User">
+       select * from user  order by id limit  #{start},#{pageSize} 
+     </select>
+     
+     <!-- 根据主键删除信息 -->     
+     <delete id="deleteById" >
+         delete from user where id=#{id}
+     </delete>
+     <!-- 登陆 -->
+     <select id="login" resultType="User"  parameterType="map">
+         select * from user where username=#{username} and password=#{password}
+     </select>
+     <!-- 总记录数 -->
+     <select id="getTotals" resultType="int">
+           select count(*) from user  
+     </select>
+     <!-- 更新数据 -->
+     <update id="update" parameterType="User">
+		update user 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="username!=null and username!=''">
+				username = #{username},
+			</if>
+			<if test="password!=null and password!=''">
+				password = #{password},
+			</if>
+		</trim>
+		where id = #{id}
+		<!-- update user set username = #{username},password = #{password} where id = #{id} -->
+	</update>
+     
+    
+     
+</mapper> 
+

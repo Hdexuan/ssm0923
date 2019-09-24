@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+  <display-name>ssm-0920</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <!-- 加载spring 框架核心配置文件（mybatis已经在spring内配置） -->
+  <context-param>
+     <!-- 上下文 Config -->
+     <param-name>contextConfigLocation</param-name>
+     <param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  <!-- 配置spring监听器 -->
+  <listener>
+     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <!-- 字符编码过滤器(避免出现中文乱码) -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+       <param-name>encoding</param-name>
+       <param-value>utf-8</param-value>    
+    </init-param>
+  </filter>
+  <filter-mapping>
+     <filter-name>encodingFilter</filter-name>
+     <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
+  <!-- springmvc 前端控制器  -->
+  <servlet>
+    <servlet-name>springmvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class><!-- 拦截，分发 （Dispatcher:所有的请求都经过它）-->
+    <init-param>
+       <param-name>contextConfigLocation</param-name>
+       <param-value>classpath:springmvc.xml</param-value><!-- 配置文件：springmvc.xml -->
+    </init-param> 
+     
+  </servlet>
+  <servlet-mapping>
+     <servlet-name>springmvc</servlet-name>
+     <url-pattern>/</url-pattern><!-- 根路径下所有的请求 -->
+  </servlet-mapping>
+  
+  
+</web-app>

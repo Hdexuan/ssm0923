@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans   
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+		http://www.springframework.org/schema/context   
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd   
+		http://www.springframework.org/schema/tx   
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd   
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd" >
+		 
+	
+		  
+		<!-- 配置扫描的包 -->
+		<context:component-scan base-package="com.awsl.controller"/><!-- 主要扫注解  -->
+		<!-- 不对静态资源过滤，列如：css、html、 imge、js资源文件-->
+		<mvc:default-servlet-handler/> 
+		<!-- 使用注解 -->
+		<mvc:annotation-driven/> 
+		<!-- 配置资源视图解释器 -->
+		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+            id="internalResourceViewResolver">
+	        <!-- 前缀 与后缀 用来构成一个路径,然后根据这个路径就可以去访问相应的.jsp -->
+	        <property name="prefix" value="/WEB-INF/jsp/" /> <!-- 根路径：-->
+	        <!-- 后缀 -->
+	        <property name="suffix" value=".jsp" />
+        </bean> 
+        
+        <!-- 配置文件上传解释器 -->
+        <bean id="multipartResolver"
+				class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+				<!-- 上传文件字符编码 -->
+				<property name="defaultEncoding" value="utf-8"/>
+				<!-- 上传单个文件最大值，以字节为单位 -->
+				<property name="MaxInMemorySize"  value="1024000"/>
+				<!-- 设置上传文件的最大尺寸 -->
+				<property name="maxUploadSize" value="10240000"/>
+		</bean>
+		
+	 
+		
+</beans>		
